@@ -7,11 +7,9 @@ class User {
   const User({this.id, this.userName});
 
   Map<String, dynamic> toJson() {
-    Map<String, dynamic> result = {
+    return {
       'id' : id,
       'userName' : userName,
     };
-
-    return result;
   }
 }

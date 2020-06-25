@@ -3,7 +3,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'store.g.dart';
 
-final pathRegex = RegExp(r"[^\.\[\]]+");
+final pathRegex = RegExp(r'[^\.\[\]]+');
 
 
 @JsonSerializable(nullable: false)
@@ -130,7 +130,7 @@ dynamic _getIn(dynamic collection, List<dynamic> pathParts,
     [dynamic defaultValue]) {
   if (collection == null) {
     return defaultValue;
-  } else if (pathParts.length == 0) {
+  } else if (pathParts.isEmpty) {
     return collection;
   } else {
     final key = pathParts.removeLast(), subCollection = collection[key];
@@ -143,21 +143,21 @@ C updateIn<C, V>(C collection, String path, V value) {
 }
 
 dynamic _updateIn(dynamic collection, List<dynamic> pathParts, dynamic value) {
-  if (pathParts.length == 0) {
+  if (pathParts.isEmpty) {
     return value;
   } else {
     final key = pathParts.removeLast(), isList = key is int;
 
     if (collection == null) {
       if (isList) {
-        collection = List();
+        collection = [];
       } else {
-        collection = Map<String, dynamic>();
+        collection = <String, dynamic>{};
       }
     }
     if (isList) {
-      int index = key as int;
-      List collectionAsList = collection as List;
+      var index = key as int,
+          collectionAsList = collection as List;
 
       if (index >= collectionAsList.length) {
         collectionAsList.length = index + 1;
@@ -173,7 +173,7 @@ dynamic _updateIn(dynamic collection, List<dynamic> pathParts, dynamic value) {
 
 dynamic _copyCollection(dynamic collection) {
   if (collection is Map) {
-    Map<String, dynamic> map = collection as Map<String, dynamic>;
+    var map = collection as Map<String, dynamic>;
     return {...map};
   } else if (collection is List) {
     List<dynamic> list = collection;
