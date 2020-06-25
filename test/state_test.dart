@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:state/state.dart';
+import './fixtures/data.dart';
+
 
 void main() {
   test('state', () {
@@ -19,6 +21,22 @@ void main() {
     incCount();
     expect(jsonEncode(store.state),
         equals('{"counter":[{"path":{"test":{"count":2}}}]}'));
+  });
+
+  test('stateView json serialize', () {
+    var p = User(id: 1, userName: "Bob");
+    final store = Store(),
+          usersView = store.getView('users', { 'firstUser' : p });
+
+    expect(jsonEncode(usersView), equals('{"store":{"state":{"users":{"firstUser":{"id":1,"userName":"Bob"}}},"sync":true},"path":"users"}'));
+
+    usersView.updateState((state) {
+      var currentUser = getIn(state, "firstUser");
+      var newUser = User(id: currentUser.id, userName: "Frank");
+      return updateIn(state, 'firstUser', newUser);
+    });
+
+    expect(jsonEncode(usersView),  equals('{"store":{"state":{"users":{"firstUser":{"id":1,"userName":"Frank"}}},"sync":true},"path":"users"}'));
   });
 
   testWidgets('StoreProvider/StoreConnector', (WidgetTester tester) async {

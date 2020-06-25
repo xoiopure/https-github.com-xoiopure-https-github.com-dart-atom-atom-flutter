@@ -1,7 +1,12 @@
 import 'dart:async';
+import 'package:json_annotation/json_annotation.dart';
 
-final pathRegex = new RegExp(r"[^\.\[\]]+");
+part 'store.g.dart';
 
+final pathRegex = RegExp(r"[^\.\[\]]+");
+
+
+@JsonSerializable(nullable: false)
 class StoreView {
   final Store _store;
   final String _path;
@@ -26,10 +31,19 @@ class StoreView {
     _store._updateState(_pathParts, updateFn);
     return this;
   }
+
+  factory StoreView.fromJson(Map<String, dynamic> json) => _$StoreViewFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StoreViewToJson(this);
+
+
 }
 
+
+@JsonSerializable(nullable: false)
 class Store {
   Map<String, dynamic> _state = Map.identity();
+  bool _sync;
   final StreamController<Map<String, dynamic>> _changeController;
 
   Store({
@@ -39,12 +53,17 @@ class Store {
     if (initialState != null) {
       _state = initialState;
     }
+    _sync = syncStream;
   }
 
   Map<String, dynamic> get state => _state;
 
+  factory Store.fromJson(Map<String, dynamic> json) => _$StoreFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StoreToJson(this);
+
   StoreView getView<V>(String path, [Map<String, dynamic> initialState]) {
-    final store = new StoreView(this, path);
+    final store = StoreView(this, path);
     store.setState(initialState);
     return store;
   }
@@ -131,9 +150,9 @@ dynamic _updateIn(dynamic collection, List<dynamic> pathParts, dynamic value) {
 
     if (collection == null) {
       if (isList) {
-        collection = new List();
+        collection = List();
       } else {
-        collection = new Map<String, dynamic>();
+        collection = Map<String, dynamic>();
       }
     }
     if (isList) {

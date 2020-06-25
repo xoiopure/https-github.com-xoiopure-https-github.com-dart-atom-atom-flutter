@@ -25,7 +25,7 @@ class StoreProvider extends InheritedWidget {
 
     if (provider == null) {
       final type = _typeOf<StoreProvider>();
-      throw new StoreProviderError(type);
+      throw StoreProviderError(type);
     }
 
     return provider._store;
