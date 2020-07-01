@@ -59,8 +59,7 @@ typedef OnWillChangeCallback<ViewModel> = void Function(
 typedef OnDidChangeCallback<ViewModel> = void Function(ViewModel viewModel);
 typedef OnInitialBuildCallback<ViewModel> = void Function(ViewModel viewModel);
 
-ViewModel defaultConverter<ViewModel>(State state) =>
-    state as ViewModel;
+ViewModel defaultConverter<ViewModel>(State state) => state as ViewModel;
 
 class StoreConnector<ViewModel> extends StatelessWidget {
   final ViewModelBuilder<ViewModel> builder;

@@ -9,6 +9,7 @@ environment:
 
 dependencies:
   atomic_state: "^0.1.1"
+  meta: any
   flutter:
     sdk: flutter
 

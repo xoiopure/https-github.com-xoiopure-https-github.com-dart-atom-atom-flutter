@@ -12,10 +12,8 @@ void main() {
     await tester.pumpWidget(StoreProvider(
         store: store,
         child: StoreConnector<Counter>(
-          builder: (context, counter) => Text(
-              counter.count.toString(),
-              key: Key('count'),
-              textDirection: TextDirection.ltr),
+          builder: (context, counter) => Text(counter.count.toString(),
+              key: Key('count'), textDirection: TextDirection.ltr),
           converter: (state) => state.getState<Counter>(),
         )));
 
