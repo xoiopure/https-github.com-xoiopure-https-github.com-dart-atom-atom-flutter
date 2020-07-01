@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:store/store.dart';
-import 'package:flutter_store/flutter_store.dart';
+import 'package:atomic_state/atomic_state.dart';
+import 'package:flutter_atomic_state/flutter_atomic_state.dart';
 
 import 'fixtures/counter.dart';
 

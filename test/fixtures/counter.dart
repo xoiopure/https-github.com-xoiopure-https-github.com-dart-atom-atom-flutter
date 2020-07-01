@@ -1,16 +1,13 @@
-import 'package:store/store.dart';
-
-class Counter extends StoreState {
-  static String name = 'counter';
+class Counter {
   final int count;
 
   Counter({
     this.count = 0
   });
-  Counter inc([int value = 1]) => Counter(count: count + value);
-  Counter dec([int value = 1]) => Counter(count: count - value);
+  factory Counter.from(Counter counter, {int count}) => Counter(count: count ?? counter.count);
 
-  @override
+  Counter inc([int value = 1]) => Counter.from(this, count: count + value);
+
   Map<String, dynamic> toJson() => {
     'count': count
   };

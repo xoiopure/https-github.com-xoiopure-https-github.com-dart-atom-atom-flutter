@@ -1,3 +1,3 @@
-## [0.0.1] - TODO: Add release date.
+## [0.1.0] - Initial Release
 
-* TODO: Describe initial release.
+Release a dart package for state based on stores.

@@ -1,14 +1,14 @@
-name: flutter_store
-description: A Flutter package for store based state.
+name: flutter_atomic_state
+description: A Flutter package for atomically updated state.
 version: 0.1.0
-author: nathanfaucett@gmail.com
+homepage: https://github.com/quantu-app/dart-flutter_atomic_state
+repository: https://github.com/quantu-app/dart-flutter_atomic_state
 
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  store:
-    path: "../store"
+  atomic_state: "^0.1.1"
   flutter:
     sdk: flutter
 

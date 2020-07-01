@@ -1,6 +1,6 @@
-# flutter store
+# flutter atomic state
 
-A Flutter package for store based state.
+A Flutter package for atomically updated state.
 
 ## Getting Started
 

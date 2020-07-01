@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:meta/meta.dart';
-import 'package:store/store.dart';
+import 'package:atomic_state/atomic_state.dart';
 
 class StoreProvider extends InheritedWidget {
   final Store _store;
