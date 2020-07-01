@@ -1,0 +1,17 @@
+name: flutter_store
+description: A Flutter package for store based state.
+version: 0.1.0
+author: nathanfaucett@gmail.com
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  store:
+    path: "../store"
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
