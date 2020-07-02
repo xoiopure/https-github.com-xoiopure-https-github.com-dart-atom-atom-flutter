@@ -14,7 +14,7 @@ void main() {
         child: StoreConnector<Counter>(
           builder: (context, counter) => Text(counter.count.toString(),
               key: Key('count'), textDirection: TextDirection.ltr),
-          converter: (state) => state.getState<Counter>(),
+          converter: (store) => store.getState<Counter>(),
         )));
 
     store.updateState<Counter>((counter) => counter.inc());

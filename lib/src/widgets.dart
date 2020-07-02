@@ -7,6 +7,7 @@ import 'package:atomic_state/atomic_state.dart';
 class StoreProvider extends InheritedWidget {
   final Store _store;
 
+  /// Creates a new [StoreProvider] [store] and [child] are required
   const StoreProvider({
     Key key,
     @required Store store,
@@ -16,7 +17,8 @@ class StoreProvider extends InheritedWidget {
         _store = store,
         super(key: key, child: child);
 
-  static Store getFromContext(BuildContext context, {bool listen = true}) {
+  /// Gets the current [Store] from the build [context]
+  static Store of(BuildContext context, {bool listen = true}) {
     final provider = (listen
         ? context.dependOnInheritedWidgetOfExactType<StoreProvider>()
         : context
@@ -24,14 +26,11 @@ class StoreProvider extends InheritedWidget {
             ?.widget) as StoreProvider;
 
     if (provider == null) {
-      final type = _typeOf<StoreProvider>();
-      throw StoreProviderError(type);
+      throw StoreProviderError(StoreProvider);
     }
 
     return provider._store;
   }
-
-  static Type _typeOf<T>() => T;
 
   @override
   bool updateShouldNotify(StoreProvider oldWidget) =>
@@ -42,7 +41,7 @@ typedef ViewModelBuilder<ViewModel> = Widget Function(
   BuildContext context,
   ViewModel vm,
 );
-typedef StateConverter<ViewModel> = ViewModel Function(
+typedef StoreConverter<ViewModel> = ViewModel Function(
   Store store,
 );
 typedef OnInitCallback = void Function(
@@ -63,7 +62,7 @@ ViewModel defaultConverter<ViewModel>(State state) => state as ViewModel;
 
 class StoreConnector<ViewModel> extends StatelessWidget {
   final ViewModelBuilder<ViewModel> builder;
-  final StateConverter<ViewModel> converter;
+  final StoreConverter<ViewModel> converter;
   final bool distinct;
   final OnInitCallback onInit;
   final OnDisposeCallback onDispose;
@@ -75,7 +74,7 @@ class StoreConnector<ViewModel> extends StatelessWidget {
 
   const StoreConnector({
     Key key,
-    StateConverter<ViewModel> converter,
+    StoreConverter<ViewModel> converter,
     @required this.builder,
     this.distinct = false,
     this.onInit,
@@ -92,7 +91,7 @@ class StoreConnector<ViewModel> extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _StoreStreamListener<ViewModel>(
-      state: StoreProvider.getFromContext(context),
+      state: StoreProvider.of(context),
       builder: builder,
       converter: converter,
       distinct: distinct,
@@ -109,7 +108,7 @@ class StoreConnector<ViewModel> extends StatelessWidget {
 
 class _StoreStreamListener<ViewModel> extends StatefulWidget {
   final ViewModelBuilder<ViewModel> builder;
-  final StateConverter<ViewModel> converter;
+  final StoreConverter<ViewModel> converter;
   final Store state;
   final bool rebuildOnChange;
   final bool distinct;
