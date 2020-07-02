@@ -11,10 +11,11 @@ void main() {
 
     await tester.pumpWidget(StoreProvider(
         store: store,
-        child: StoreConnector<Counter>(
-          builder: (context, counter) => Text(counter.count.toString(),
-              key: Key('count'), textDirection: TextDirection.ltr),
-          converter: (store) => store.getState<Counter>(),
+        child: StoreConnector<Store>(
+          builder: (context, store) => Text(
+              store.getState<Counter>().count.toString(),
+              key: Key('count'),
+              textDirection: TextDirection.ltr),
         )));
 
     store.updateState<Counter>((counter) => counter.inc());

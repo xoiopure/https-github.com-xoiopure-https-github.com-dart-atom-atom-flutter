@@ -1,6 +1,10 @@
+## [0.1.1] - Default Converter bug fix
+
+Default Converter function bug fix for invalid type.
+
 ## [0.1.1] - Clean up
 
-Clean up package for pub.dev
+Clean up package for pub.dev.
 
 ## [0.1.0] - Initial Release
 
