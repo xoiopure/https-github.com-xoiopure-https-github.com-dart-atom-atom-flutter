@@ -1,7 +1,7 @@
 name: flutter_atomic_state
 description: |
   A Flutter package providing widgets for global application immutable atomically updated states.
-version: 0.1.2
+version: 0.1.3
 homepage: https://github.com/quantu-app/dart-flutter_atomic_state
 repository: https://github.com/quantu-app/dart-flutter_atomic_state
 

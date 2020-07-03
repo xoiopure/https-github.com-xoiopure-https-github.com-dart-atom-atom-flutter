@@ -18,7 +18,7 @@ class StoreProvider extends InheritedWidget {
         super(key: key, child: child);
 
   /// Gets the current [Store] from the build [context]
-  static Store of(BuildContext context, {bool listen = true}) {
+  static Store getStore(BuildContext context, {bool listen = true}) {
     final provider = (listen
         ? context.dependOnInheritedWidgetOfExactType<StoreProvider>()
         : context
@@ -38,9 +38,7 @@ class StoreProvider extends InheritedWidget {
 }
 
 typedef ViewModelBuilder<ViewModel> = Widget Function(
-  BuildContext context,
-  ViewModel vm,
-);
+    BuildContext context, Store store, ViewModel viewModel);
 typedef StoreConverter<ViewModel> = ViewModel Function(
   Store store,
 );
@@ -58,8 +56,6 @@ typedef OnWillChangeCallback<ViewModel> = void Function(
 typedef OnDidChangeCallback<ViewModel> = void Function(ViewModel viewModel);
 typedef OnInitialBuildCallback<ViewModel> = void Function(ViewModel viewModel);
 
-ViewModel defaultConverter<ViewModel>(Store store) => store as ViewModel;
-
 class StoreConnector<ViewModel> extends StatelessWidget {
   final ViewModelBuilder<ViewModel> builder;
   final StoreConverter<ViewModel> converter;
@@ -74,7 +70,7 @@ class StoreConnector<ViewModel> extends StatelessWidget {
 
   const StoreConnector({
     Key key,
-    StoreConverter<ViewModel> converter,
+    @required this.converter,
     @required this.builder,
     this.distinct = false,
     this.onInit,
@@ -84,14 +80,14 @@ class StoreConnector<ViewModel> extends StatelessWidget {
     this.onWillChange,
     this.onDidChange,
     this.onInitialBuild,
-  })  : assert(builder != null),
-        converter = converter ?? defaultConverter,
+  })  : assert(converter != null),
+        assert(builder != null),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return _StoreStreamListener<ViewModel>(
-      state: StoreProvider.of(context),
+      store: StoreProvider.getStore(context),
       builder: builder,
       converter: converter,
       distinct: distinct,
@@ -109,7 +105,7 @@ class StoreConnector<ViewModel> extends StatelessWidget {
 class _StoreStreamListener<ViewModel> extends StatefulWidget {
   final ViewModelBuilder<ViewModel> builder;
   final StoreConverter<ViewModel> converter;
-  final Store state;
+  final Store store;
   final bool rebuildOnChange;
   final bool distinct;
   final OnInitCallback onInit;
@@ -122,7 +118,7 @@ class _StoreStreamListener<ViewModel> extends StatefulWidget {
   const _StoreStreamListener({
     Key key,
     @required this.builder,
-    @required this.state,
+    @required this.store,
     @required this.converter,
     this.distinct = false,
     this.onInit,
@@ -148,7 +144,7 @@ class _StoreStreamListenerState<ViewModel>
   @override
   void initState() {
     if (widget.onInit != null) {
-      widget.onInit(widget.state);
+      widget.onInit(widget.store);
     }
 
     if (widget.onInitialBuild != null) {
@@ -157,7 +153,7 @@ class _StoreStreamListenerState<ViewModel>
       });
     }
 
-    latestValue = widget.converter(widget.state);
+    latestValue = widget.converter(widget.store);
     _createStream();
 
     super.initState();
@@ -166,7 +162,7 @@ class _StoreStreamListenerState<ViewModel>
   @override
   void dispose() {
     if (widget.onDispose != null) {
-      widget.onDispose(widget.state);
+      widget.onDispose(widget.store);
     }
 
     super.dispose();
@@ -174,9 +170,9 @@ class _StoreStreamListenerState<ViewModel>
 
   @override
   void didUpdateWidget(_StoreStreamListener<ViewModel> oldWidget) {
-    latestValue = widget.converter(widget.state);
+    latestValue = widget.converter(widget.store);
 
-    if (widget.state != oldWidget.state) {
+    if (widget.store != oldWidget.store) {
       _createStream();
     }
 
@@ -190,10 +186,11 @@ class _StoreStreamListenerState<ViewModel>
             stream: stream,
             builder: (context, snapshot) => widget.builder(
               context,
+              widget.store,
               latestValue,
             ),
           )
-        : widget.builder(context, latestValue);
+        : widget.builder(context, widget.store, latestValue);
   }
 
   ViewModel _mapConverter(Store store) {
@@ -217,7 +214,7 @@ class _StoreStreamListenerState<ViewModel>
   }
 
   void _createStream() {
-    stream = widget.state.onChange
+    stream = widget.store.onChange
         .where(_ignoreChange)
         .map(_mapConverter)
         .where(_whereDistinct)
